@@ -1,230 +1,679 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Interactive Wedding Invitation</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#FFF8F3" />
+  <title>Vamsi & Uma Pragna | Royal Wedding Invitation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Great+Vibes&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@18.3.1",
+        "react/": "https://esm.sh/react@18.3.1/",
+        "react/jsx-runtime": "https://esm.sh/react@18.3.1/jsx-runtime",
+        "react/jsx-dev-runtime": "https://esm.sh/react@18.3.1/jsx-dev-runtime",
+        "react-dom": "https://esm.sh/react-dom@18.3.1",
+        "react-dom/": "https://esm.sh/react-dom@18.3.1/",
+        "react-dom/client": "https://esm.sh/react-dom@18.3.1/client",
+        "framer-motion": "https://esm.sh/framer-motion@11.18.2?external=react,react-dom"
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --cream: #FFF8F3;
+      --blush: #F5E4E0;
+      --rose-gold: #D8A48F;
+      --gold: #D4AF37;
+      --charcoal: #333333;
+      --deep-rose: #9D5C63;
+      --ivory-glass: rgba(255, 248, 243, 0.72);
+      --shadow: 0 28px 80px rgba(93, 48, 35, 0.16);
+    }
 
-<script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--charcoal);
+      background: var(--cream);
+      font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow-x: hidden;
+    }
+    body.invitation-locked { overflow: hidden; }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
 
-<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    .app-shell {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 15% 10%, rgba(245, 228, 224, 0.95), transparent 33rem),
+        radial-gradient(circle at 86% 20%, rgba(216, 164, 143, 0.25), transparent 25rem),
+        linear-gradient(145deg, #fffdf9 0%, var(--cream) 48%, #f8ebe6 100%);
+      position: relative;
+      isolation: isolate;
+    }
+    .app-shell::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      background-image:
+        linear-gradient(30deg, rgba(212,175,55,0.035) 12%, transparent 12.5%, transparent 87%, rgba(212,175,55,0.035) 87.5%, rgba(212,175,55,0.035)),
+        linear-gradient(150deg, rgba(212,175,55,0.035) 12%, transparent 12.5%, transparent 87%, rgba(212,175,55,0.035) 87.5%, rgba(212,175,55,0.035));
+      background-size: 54px 94px;
+      opacity: 0.65;
+      mask-image: linear-gradient(to bottom, black, transparent 86%);
+    }
 
-<style>
-/* Premium custom serif styles & utility setups */
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap');
+    .font-script { font-family: 'Great Vibes', cursive; }
+    .font-display { font-family: 'Cormorant Garamond', Georgia, serif; }
+    .eyebrow {
+      color: var(--deep-rose);
+      font-size: 0.72rem;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+    .section {
+      min-height: 100vh;
+      padding: 7rem clamp(1.15rem, 5vw, 5rem);
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .section-inner { width: min(1120px, 100%); position: relative; z-index: 2; }
+    .section-title {
+      margin: 0;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 10vw, 6.5rem);
+      line-height: 0.9;
+      font-weight: 500;
+      color: #57362e;
+      text-align: center;
+    }
+    .gold-divider {
+      width: min(220px, 56vw);
+      height: 1px;
+      margin: 1.5rem auto;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      position: relative;
+    }
+    .gold-divider::before, .gold-divider::after {
+      content: '✦';
+      color: var(--gold);
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.75rem;
+    }
+    .gold-divider::before { left: 45%; }
+    .gold-divider::after { right: 45%; }
 
-.font-serif-luxury {
-font-family: 'Playfair Display', Georgia, serif;
-}
-.font-cinzel {
-font-family: 'Cinzel', serif;
-}
+    .opening {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 40%, rgba(255,255,255,0.96), transparent 18rem),
+        radial-gradient(circle at 18% 18%, rgba(216,164,143,0.42), transparent 18rem),
+        radial-gradient(circle at 84% 80%, rgba(245,228,224,0.95), transparent 22rem),
+        linear-gradient(135deg, var(--cream), var(--blush));
+    }
+    .opening::before {
+      content: '';
+      position: absolute;
+      width: 88vmin;
+      height: 88vmin;
+      border: 1px solid rgba(212,175,55,0.34);
+      border-radius: 50%;
+      box-shadow: inset 0 0 90px rgba(212,175,55,0.1), 0 0 80px rgba(216,164,143,0.18);
+      animation: haloPulse 7s ease-in-out infinite;
+    }
+    @keyframes haloPulse { 50% { transform: scale(1.035); opacity: 0.68; } }
+    .opening-card {
+      width: min(88vw, 520px);
+      min-height: 64vh;
+      padding: clamp(2rem, 8vw, 4.25rem) 1.5rem;
+      border: 1px solid rgba(212,175,55,0.35);
+      border-radius: 46px;
+      background: rgba(255, 248, 243, 0.56);
+      box-shadow: var(--shadow), inset 0 0 0 10px rgba(255,255,255,0.32);
+      backdrop-filter: blur(22px);
+      text-align: center;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .opening-card::before, .opening-card::after {
+      content: '❦';
+      position: absolute;
+      color: rgba(212,175,55,0.52);
+      font-size: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .opening-card::before { top: 1.2rem; }
+    .opening-card::after { bottom: 1.2rem; }
+    .monogram {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.3rem, 17vw, 6.2rem);
+      letter-spacing: 0.08em;
+      color: #6f463b;
+      text-shadow: 0 10px 34px rgba(216,164,143,0.4);
+    }
+    .heart { color: var(--gold); font-size: 0.48em; vertical-align: middle; margin: 0 0.12em; }
+    .opening-names {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(2.6rem, 12vw, 5rem);
+      color: #5c342f;
+      margin: 0.6rem 0 0;
+    }
+    .luxury-button {
+      border: 1px solid rgba(212,175,55,0.68);
+      border-radius: 999px;
+      padding: 1rem 1.75rem;
+      min-width: 210px;
+      color: #fffaf3;
+      background: linear-gradient(135deg, #b6822b, var(--gold), #bd7f66);
+      box-shadow: 0 18px 42px rgba(157,92,99,0.25), inset 0 1px 0 rgba(255,255,255,0.45);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 0.72rem;
+      font-weight: 600;
+      transition: transform 400ms ease, box-shadow 400ms ease;
+    }
+    .luxury-button:hover { transform: translateY(-3px); box-shadow: 0 24px 54px rgba(157,92,99,0.34); }
+    .particles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+    .particle {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: rgba(212,175,55,0.72);
+      box-shadow: 0 0 18px rgba(212,175,55,0.82);
+      animation: particleFloat var(--duration) ease-in-out infinite;
+      left: var(--x);
+      top: var(--y);
+      opacity: 0.55;
+    }
+    @keyframes particleFloat {
+      0%, 100% { transform: translate3d(0,0,0) scale(0.7); opacity: 0.18; }
+      50% { transform: translate3d(var(--drift), -42px, 0) scale(1.18); opacity: 0.85; }
+    }
+    .door-stage { position: fixed; inset: 0; pointer-events: none; z-index: 120; display: flex; }
+    .door {
+      width: 50%;
+      height: 100%;
+      background:
+        radial-gradient(circle at center, rgba(255,255,255,0.16), transparent 16rem),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0 2px, transparent 2px 7rem),
+        linear-gradient(145deg, #6a2f28, #a75a4c 44%, #4d211f 100%);
+      border-color: rgba(212,175,55,0.6);
+      box-shadow: inset 0 0 0 9px rgba(212,175,55,0.18), inset 0 0 70px rgba(0,0,0,0.32);
+      position: relative;
+    }
+    .door.left { border-right: 3px solid rgba(212,175,55,0.72); transform-origin: left center; }
+    .door.right { border-left: 3px solid rgba(212,175,55,0.72); transform-origin: right center; }
+    .door::before {
+      content: '';
+      position: absolute;
+      inset: 9% 8%;
+      border: 1px solid rgba(212,175,55,0.42);
+      border-radius: 999px 999px 20px 20px;
+      background: linear-gradient(180deg, transparent, rgba(212,175,55,0.08));
+    }
+    .door::after {
+      content: '✦';
+      position: absolute;
+      top: 49%;
+      color: var(--gold);
+      font-size: 1.6rem;
+      filter: drop-shadow(0 0 12px rgba(212,175,55,0.72));
+    }
+    .door.left::after { right: 1.6rem; }
+    .door.right::after { left: 1.6rem; }
 
-/* Vertical Typography Setup */
-.vertical-text {
-writing-mode: vertical-rl;
-text-orientation: mixed;
-}
+    .hero {
+      min-height: 100svh;
+      text-align: center;
+      color: #51352f;
+      background:
+        linear-gradient(rgba(255,248,243,0.55), rgba(255,248,243,0.96)),
+        radial-gradient(circle at 50% 18%, rgba(216,164,143,0.28), transparent 22rem);
+    }
+    .hero-bg {
+      position: absolute;
+      inset: -6%;
+      z-index: 0;
+      background:
+        radial-gradient(circle at 22% 25%, rgba(245,228,224,0.9), transparent 19rem),
+        radial-gradient(circle at 82% 18%, rgba(212,175,55,0.16), transparent 18rem),
+        radial-gradient(circle at 56% 78%, rgba(216,164,143,0.21), transparent 22rem);
+      animation: slowZoom 18s ease-in-out infinite alternate;
+    }
+    @keyframes slowZoom { from { transform: scale(1); } to { transform: scale(1.09); } }
+    .floral {
+      position: absolute;
+      color: rgba(157,92,99,0.28);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(5rem, 24vw, 13rem);
+      line-height: 1;
+      pointer-events: none;
+      filter: drop-shadow(0 18px 32px rgba(216,164,143,0.16));
+    }
+    .floral.one { top: 7%; left: -1.5rem; transform: rotate(-18deg); }
+    .floral.two { right: -2rem; bottom: 9%; transform: rotate(18deg); }
+    .hero-names {
+      margin: 0;
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(4.35rem, 19vw, 10rem);
+      line-height: 0.92;
+      color: #5a342f;
+      text-shadow: 0 18px 45px rgba(216,164,143,0.22);
+    }
+    .ampersand {
+      display: block;
+      color: var(--gold);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.62em;
+      line-height: 0.75;
+      margin: 0.2rem 0;
+    }
+    .hero-copy {
+      max-width: 620px;
+      margin: 1.6rem auto 0;
+      font-size: clamp(1rem, 2.4vw, 1.25rem);
+      line-height: 1.9;
+      color: rgba(51,51,51,0.78);
+    }
+    .hero-details {
+      margin-top: 2rem;
+      display: grid;
+      gap: 0.65rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.45rem, 4.6vw, 2.3rem);
+      color: #6a463e;
+    }
 
-/* Smooth CSS Keyframe Animations for Scenic Background Elements */
-@keyframes floatLeftToRight {
-0% { transform: translate(-50px, 100px) scale(0.8); opacity: 0; }
-10% { opacity: 1; }
-90% { opacity: 1; }
-100% { transform: translate(500px, -50px) scale(1); opacity: 0; }
-}
+    .countdown-grid, .events-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: clamp(0.75rem, 2vw, 1.5rem);
+      margin-top: 3rem;
+    }
+    .glass-card {
+      background: linear-gradient(145deg, rgba(255,255,255,0.72), rgba(245,228,224,0.43));
+      border: 1px solid rgba(212,175,55,0.34);
+      border-radius: 30px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      position: relative;
+      overflow: hidden;
+    }
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.5) 35%, transparent 70%);
+      transform: translateX(-120%);
+      transition: transform 900ms ease;
+    }
+    .glass-card:hover::before { transform: translateX(120%); }
+    .count-card { padding: clamp(1rem, 4vw, 2rem) 0.55rem; text-align: center; }
+    .count-value {
+      display: block;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.25rem, 9vw, 5.5rem);
+      line-height: 0.9;
+      color: #6b3d35;
+      font-weight: 600;
+    }
+    .count-label { color: var(--deep-rose); font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; }
 
-@keyframes floatRightToLeft {
-0% { transform: translate(450px, 180px) scale(0.7); opacity: 0; }
-10% { opacity: 0.8; }
-90% { opacity: 0.8; }
-100% { transform: translate(-100px, 100px) scale(0.9); opacity: 0; }
-}
+    .events-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; }
+    .event-card { padding: clamp(1.55rem, 4vw, 2.6rem); min-height: 280px; display: flex; flex-direction: column; justify-content: space-between; }
+    .event-card h3 { margin: 0.85rem 0 1rem; font-family: 'Cormorant Garamond', serif; font-size: clamp(2.4rem, 7vw, 4.6rem); line-height: 0.92; color: #5b342e; font-weight: 500; }
+    .event-meta { display: grid; gap: 0.65rem; color: rgba(51,51,51,0.76); }
+    .meal { margin-top: 1.1rem; color: var(--deep-rose); font-weight: 500; }
 
-.animate-bird-1 {
-animation: floatLeftToRight 6s linear infinite;
-}
+    .venue-layout {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: clamp(1rem, 4vw, 2.4rem);
+      align-items: stretch;
+      margin-top: 3rem;
+    }
+    .venue-card { padding: clamp(1.7rem, 5vw, 3rem); display: grid; align-content: center; }
+    .venue-card h3 { margin: 0 0 1rem; font-family: 'Cormorant Garamond', serif; font-size: clamp(2.6rem, 7vw, 4.8rem); line-height: 0.95; color: #57362e; font-weight: 500; }
+    .map-frame { min-height: 420px; border-radius: 32px; overflow: hidden; border: 1px solid rgba(212,175,55,0.38); box-shadow: var(--shadow); background: var(--blush); }
+    .map-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+    .directions { text-decoration: none; display: inline-flex; align-items: center; justify-content: center; margin-top: 1.8rem; }
 
-.animate-bird-2 {
-animation: floatRightToLeft 7s linear infinite;
-animation-delay: 1.5s;
-}
-</style>
+    .rsvp-card {
+      width: min(720px, 100%);
+      margin: 3rem auto 0;
+      padding: clamp(1.4rem, 5vw, 3.2rem);
+      text-align: center;
+    }
+    .rsvp-card h3 { margin: 0 0 2rem; font-family: 'Cormorant Garamond', serif; font-size: clamp(2.4rem, 8vw, 4.5rem); color: #57362e; font-weight: 500; }
+    .form-grid { display: grid; gap: 1rem; text-align: left; }
+    label { display: grid; gap: 0.45rem; color: var(--deep-rose); font-size: 0.74rem; letter-spacing: 0.13em; text-transform: uppercase; }
+    input {
+      width: 100%;
+      border: 1px solid rgba(212,175,55,0.32);
+      background: rgba(255,255,255,0.62);
+      border-radius: 18px;
+      padding: 1rem 1.1rem;
+      outline: none;
+      color: var(--charcoal);
+      transition: border-color 250ms ease, box-shadow 250ms ease;
+    }
+    input:focus { border-color: var(--gold); box-shadow: 0 0 0 4px rgba(212,175,55,0.12); }
+    .rsvp-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-top: 1.25rem; }
+    .secondary-button {
+      border: 1px solid rgba(157,92,99,0.24);
+      color: #7d4943;
+      background: rgba(255,255,255,0.54);
+      border-radius: 999px;
+      padding: 1rem 1.1rem;
+      box-shadow: 0 14px 32px rgba(93,48,35,0.09);
+      transition: transform 350ms ease, border-color 350ms ease;
+    }
+    .secondary-button:hover { transform: translateY(-2px); border-color: rgba(212,175,55,0.55); }
+    .footer { text-align: center; padding: 4rem 1.25rem 6rem; color: rgba(51,51,51,0.66); }
+    .footer .font-script { color: #5a342f; font-size: clamp(2.7rem, 10vw, 4.8rem); }
+
+    @media (max-width: 820px) {
+      .countdown-grid { grid-template-columns: repeat(2, 1fr); }
+      .events-grid, .venue-layout { grid-template-columns: 1fr; }
+      .section { padding-top: 5.5rem; padding-bottom: 5.5rem; }
+      .map-frame { min-height: 340px; }
+    }
+    @media (max-width: 520px) {
+      .opening-card { border-radius: 34px; min-height: 58vh; }
+      .countdown-grid { gap: 0.65rem; }
+      .glass-card { border-radius: 24px; }
+      .rsvp-actions { grid-template-columns: 1fr; }
+      .luxury-button { width: 100%; min-width: 0; padding-left: 1rem; padding-right: 1rem; }
+      .section { padding-left: 1rem; padding-right: 1rem; }
+      .hero-copy { line-height: 1.75; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: 0.001ms !important; }
+    }
+  </style>
 </head>
-<body class="bg-stone-900 flex justify-center items-center min-h-screen m-0 overflow-hidden selection:bg-transparent">
+<body class="invitation-locked">
+  <div id="root"></div>
+  <script type="module">
+    import React, { useEffect, useRef, useState } from 'react';
+    import { createRoot } from 'react-dom/client';
+    import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion';
 
-<div x-data="{ phase: 1 }" class="relative w-full h-[100dvh] max-w-md bg-[#FFF5E1] shadow-2xl overflow-hidden flex flex-col justify-stretch">
+    const h = React.createElement;
+    const weddingDate = new Date('2027-08-30T11:30:00-05:00');
+    const particles = Array.from({ length: 36 }, (_, index) => ({
+      id: index,
+      x: `${(index * 29) % 101}%`,
+      y: `${(index * 47) % 100}%`,
+      drift: `${index % 2 ? '-' : ''}${18 + (index % 7) * 8}px`,
+      duration: `${6 + (index % 9) * 0.7}s`,
+    }));
 
-<div x-show="phase === 1"
-x-transition:leave="transition ease-in duration-700 opacity-0"
-class="absolute inset-0 z-50 flex w-full h-full">
+    function playInvitationMusic() {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return;
+      const ctx = new AudioContext();
+      const master = ctx.createGain();
+      master.gain.setValueAtTime(0.0001, ctx.currentTime);
+      master.gain.exponentialRampToValueAtTime(0.055, ctx.currentTime + 1.6);
+      master.connect(ctx.destination);
+      const notes = [261.63, 329.63, 392.00, 493.88, 392.00, 329.63];
+      notes.forEach((note, index) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = index % 2 ? 'triangle' : 'sine';
+        osc.frequency.value = note;
+        gain.gain.setValueAtTime(0.0001, ctx.currentTime + index * 0.34);
+        gain.gain.exponentialRampToValueAtTime(0.035, ctx.currentTime + index * 0.34 + 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + index * 0.34 + 1.4);
+        osc.connect(gain).connect(master);
+        osc.start(ctx.currentTime + index * 0.34);
+        osc.stop(ctx.currentTime + index * 0.34 + 1.55);
+      });
+      setTimeout(() => {
+        master.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 1.5);
+        setTimeout(() => ctx.close(), 1800);
+      }, 9000);
+    }
 
-<div @click="phase = 2"
-class="w-1/2 h-full border-r border-[#D4AF37]/30 cursor-pointer flex items-center justify-end pr-4 transition-transform duration-1000 ease-in-out select-none active:-translate-x-full"
-style="background-color: #D15B8F; background-image: radial-gradient(circle at right, #b44374 0%, #D15B8F 70%);">
-<span class="text-white/60 text-xs tracking-[0.3em] uppercase vertical-text font-sans font-semibold">Click / Tap to Open</span>
-</div>
+    function useCountdown(target) {
+      const [time, setTime] = useState({ days: '000', hours: '00', minutes: '00', seconds: '00' });
+      useEffect(() => {
+        const tick = () => {
+          const distance = Math.max(target.getTime() - Date.now(), 0);
+          const days = Math.floor(distance / 86400000);
+          const hours = Math.floor((distance % 86400000) / 3600000);
+          const minutes = Math.floor((distance % 3600000) / 60000);
+          const seconds = Math.floor((distance % 60000) / 1000);
+          setTime({
+            days: String(days).padStart(3, '0'),
+            hours: String(hours).padStart(2, '0'),
+            minutes: String(minutes).padStart(2, '0'),
+            seconds: String(seconds).padStart(2, '0'),
+          });
+        };
+        tick();
+        const timer = setInterval(tick, 1000);
+        return () => clearInterval(timer);
+      }, [target]);
+      return time;
+    }
 
-<div @click="phase = 2"
-class="w-1/2 h-full border-l border-[#D4AF37]/30 cursor-pointer flex items-center justify-start pl-4 transition-transform duration-1000 ease-in-out select-none active:translate-x-full"
-style="background-color: #D15B8F; background-image: radial-gradient(circle at left, #b44374 0%, #D15B8F 70%);">
-<span class="text-white/60 text-xs tracking-[0.3em] uppercase vertical-text font-sans font-semibold">Click / Tap to Open</span>
-</div>
+    const fadeUp = {
+      hidden: { opacity: 0, y: 44, filter: 'blur(8px)' },
+      visible: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 1.15, ease: [0.19, 1, 0.22, 1] } },
+    };
+    const stagger = { visible: { transition: { staggerChildren: 0.18, delayChildren: 0.15 } } };
 
-<div class="absolute inset-x-0 bottom-24 text-center pointer-events-none z-50 px-6">
-<h2 class="text-white font-serif-luxury tracking-wide text-xl drop-shadow-lg">
-Fully Customizable to your Style
-</h2>
-</div>
-</div>
+    function Particles() {
+      return h('div', { className: 'particles', 'aria-hidden': true },
+        particles.map((particle) => h('span', {
+          key: particle.id,
+          className: 'particle',
+          style: { '--x': particle.x, '--y': particle.y, '--drift': particle.drift, '--duration': particle.duration },
+        }))
+      );
+    }
 
-<div x-show="phase === 2"
-x-init="$watch('phase', value => { if(value === 2) { setTimeout(() => phase = 3, 4500) } })"
-x-transition:enter="transition ease-out duration-700 opacity-0 scale-95"
-x-transition:leave="transition ease-in duration-500 opacity-0"
-class="absolute inset-0 bg-gradient-to-b from-[#FFF0F5] to-[#E3F2FD] flex flex-col items-center justify-between py-24 px-6 z-40">
+    function OpeningInvitation({ entered, opening, onOpen }) {
+      return h(AnimatePresence, null,
+        !entered && h(motion.div, {
+          className: 'opening',
+          initial: { opacity: 1 },
+          exit: { opacity: 0, transition: { duration: 1.25, ease: 'easeInOut', delay: 1.05 } },
+        },
+          h(Particles),
+          h(motion.div, {
+            className: 'opening-card',
+            variants: stagger,
+            initial: 'hidden',
+            animate: 'visible',
+          },
+            h(motion.div, { className: 'monogram', variants: fadeUp }, 'V ', h('span', { className: 'heart' }, '♥'), ' P'),
+            h(motion.h1, { className: 'opening-names', variants: fadeUp }, 'Vamsi & Uma Pragna'),
+            h(motion.div, { className: 'gold-divider', variants: fadeUp, 'aria-hidden': true }),
+            h(motion.p, { className: 'eyebrow', variants: fadeUp }, 'A royal invitation awaits'),
+            h(motion.button, { className: 'luxury-button', variants: fadeUp, onClick: onOpen, whileTap: { scale: 0.97 }, disabled: opening }, opening ? 'Revealing...' : 'Open Invitation')
+          ),
+          opening && h(motion.div, { className: 'door-stage', initial: { opacity: 1 }, animate: { opacity: 1 }, exit: { opacity: 0 } },
+            h(motion.div, { className: 'door left', initial: { x: 0 }, animate: { x: '-102%' }, transition: { duration: 2.05, ease: [0.77, 0, 0.175, 1] } }),
+            h(motion.div, { className: 'door right', initial: { x: 0 }, animate: { x: '102%' }, transition: { duration: 2.05, ease: [0.77, 0, 0.175, 1] } })
+          )
+        )
+      );
+    }
 
-<div class="absolute text-2xl pointer-events-none animate-bird-1">🕊️</div>
-<div class="absolute text-xl pointer-events-none animate-bird-2">🕊️</div>
+    function HeroSection() {
+      const ref = useRef(null);
+      const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
+      const yOne = useTransform(scrollYProgress, [0, 1], [0, -90]);
+      const yTwo = useTransform(scrollYProgress, [0, 1], [0, 75]);
+      return h('section', { ref, className: 'section hero' },
+        h('div', { className: 'hero-bg' }),
+        h(motion.div, { className: 'floral one', style: { y: yOne }, 'aria-hidden': true }, '❦'),
+        h(motion.div, { className: 'floral two', style: { y: yTwo }, 'aria-hidden': true }, '❧'),
+        h(motion.div, { className: 'section-inner', variants: stagger, initial: 'hidden', whileInView: 'visible', viewport: { once: true, amount: 0.35 } },
+          h(motion.p, { className: 'eyebrow', variants: fadeUp }, 'Together with their families'),
+          h(motion.h1, { className: 'hero-names', variants: fadeUp }, 'Uma Pragna', h('span', { className: 'ampersand' }, '&'), 'Vamsi'),
+          h(motion.div, { className: 'gold-divider', variants: fadeUp, 'aria-hidden': true }),
+          h(motion.p, { className: 'hero-copy', variants: fadeUp }, 'Together with their families', h('br'), 'invite you to celebrate their wedding'),
+          h(motion.div, { className: 'hero-details', variants: fadeUp },
+            h('strong', null, 'August 30, 2027'),
+            h('span', null, 'The Bella Grande Ranch'),
+            h('span', null, 'Celina, Texas')
+          )
+        )
+      );
+    }
 
-<div class="mt-12 flex flex-col items-center justify-center">
-<div class="text-8xl font-light tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-[#D15B8F] to-[#8A4F7D] font-serif-luxury select-none drop-shadow-sm">
-RY
-</div>
-<div class="w-16 h-[1px] bg-[#D15B8F]/30 my-4"></div>
-</div>
+    function CountdownSection() {
+      const time = useCountdown(weddingDate);
+      const units = [['Days', time.days], ['Hours', time.hours], ['Minutes', time.minutes], ['Seconds', time.seconds]];
+      return h('section', { className: 'section' },
+        h(Particles),
+        h(motion.div, { className: 'section-inner', variants: stagger, initial: 'hidden', whileInView: 'visible', viewport: { once: true, amount: 0.25 } },
+          h(motion.p, { className: 'eyebrow', variants: fadeUp, style: { textAlign: 'center' } }, 'Counting down to forever'),
+          h(motion.h2, { className: 'section-title', variants: fadeUp }, 'The Celebration Begins'),
+          h(motion.div, { className: 'gold-divider', variants: fadeUp, 'aria-hidden': true }),
+          h(motion.div, { className: 'countdown-grid', variants: stagger }, units.map(([label, value]) =>
+            h(motion.div, { key: label, className: 'glass-card count-card', variants: fadeUp, whileHover: { y: -8, transition: { duration: 0.45 } } },
+              h('span', { className: 'count-value' }, value),
+              h('span', { className: 'count-label' }, label)
+            )
+          ))
+        )
+      );
+    }
 
-<div class="w-full text-center pb-6">
-<span class="text-xs text-stone-400 tracking-[0.25em] uppercase font-sans">One Single Link to Share</span>
-</div>
-</div>
+    function EventsSection() {
+      const events = [
+        { title: 'Carnival Night', date: 'August 29, 2027', time: '6:00 PM', meal: 'Dinner Provided' },
+        { title: 'Wedding Ceremony', date: 'August 30, 2027', time: '11:30 AM', meal: 'Lunch Provided' },
+      ];
+      return h('section', { className: 'section' },
+        h(motion.div, { className: 'section-inner', variants: stagger, initial: 'hidden', whileInView: 'visible', viewport: { once: true, amount: 0.25 } },
+          h(motion.p, { className: 'eyebrow', variants: fadeUp, style: { textAlign: 'center' } }, 'Wedding festivities'),
+          h(motion.h2, { className: 'section-title', variants: fadeUp }, 'Events'),
+          h(motion.div, { className: 'gold-divider', variants: fadeUp, 'aria-hidden': true }),
+          h(motion.div, { className: 'events-grid', variants: stagger }, events.map((event) =>
+            h(motion.article, { key: event.title, className: 'glass-card event-card', variants: fadeUp, whileHover: { y: -10, scale: 1.015 }, transition: { duration: 0.45 } },
+              h('div', null,
+                h('p', { className: 'eyebrow' }, event.date),
+                h('h3', null, event.title),
+                h('div', { className: 'event-meta' },
+                  h('span', null, 'Time: ', h('strong', null, event.time)),
+                  h('span', null, 'Venue: The Bella Grande Ranch')
+                )
+              ),
+              h('div', { className: 'meal' }, event.meal)
+            )
+          ))
+        )
+      );
+    }
 
-<div x-show="phase === 3"
-x-transition:enter="transition ease-out duration-1000 opacity-0 scale-95"
-class="w-full h-full bg-[#111111] text-[#E5D3B3] flex flex-col items-center justify-between p-8 border-4 border-stone-900 relative z-30">
+    function VenueSection() {
+      const directions = 'https://www.google.com/maps/search/?api=1&query=The%20Bella%20Grande%20Ranch%20Celina%20Texas';
+      return h('section', { className: 'section' },
+        h(motion.div, { className: 'section-inner', variants: stagger, initial: 'hidden', whileInView: 'visible', viewport: { once: true, amount: 0.22 } },
+          h(motion.p, { className: 'eyebrow', variants: fadeUp, style: { textAlign: 'center' } }, 'Where love gathers'),
+          h(motion.h2, { className: 'section-title', variants: fadeUp }, 'Venue'),
+          h(motion.div, { className: 'gold-divider', variants: fadeUp, 'aria-hidden': true }),
+          h('div', { className: 'venue-layout' },
+            h(motion.div, { className: 'glass-card venue-card', variants: fadeUp, whileHover: { y: -8 } },
+              h('p', { className: 'eyebrow' }, 'The destination'),
+              h('h3', null, 'The Bella Grande Ranch'),
+              h('p', { className: 'hero-copy', style: { margin: 0 } }, 'Celina, Texas'),
+              h('a', { className: 'luxury-button directions', href: directions, target: '_blank', rel: 'noreferrer' }, 'Open Directions')
+            ),
+            h(motion.div, { className: 'map-frame', variants: fadeUp },
+              h('iframe', {
+                title: 'Map to The Bella Grande Ranch in Celina, Texas',
+                loading: 'lazy',
+                referrerPolicy: 'no-referrer-when-downgrade',
+                src: 'https://www.google.com/maps?q=The%20Bella%20Grande%20Ranch%20Celina%20Texas&output=embed'
+              })
+            )
+          )
+        )
+      );
+    }
 
-<div class="w-full text-center mt-8">
-<p class="text-[10px] tracking-[0.3em] text-[#A39274] uppercase font-sans">With Immense Joy and Love</p>
-<h1 class="text-3xl font-light mt-4 tracking-wide text-white font-cinzel">
-Yashwanth <span class="italic font-serif-luxury text-[#D4AF37]">&</span> Richa
-</h1>
-</div>
+    function RSVPSection() {
+      const [reply, setReply] = useState('');
+      return h('section', { className: 'section' },
+        h(motion.div, { className: 'section-inner', variants: stagger, initial: 'hidden', whileInView: 'visible', viewport: { once: true, amount: 0.25 } },
+          h(motion.p, { className: 'eyebrow', variants: fadeUp, style: { textAlign: 'center' } }, 'Kindly respond'),
+          h(motion.h2, { className: 'section-title', variants: fadeUp }, 'RSVP'),
+          h(motion.div, { className: 'gold-divider', variants: fadeUp, 'aria-hidden': true }),
+          h(motion.form, { className: 'glass-card rsvp-card', variants: fadeUp, onSubmit: (event) => event.preventDefault() },
+            h('h3', null, 'Will you celebrate with us?'),
+            h('div', { className: 'form-grid' },
+              h('label', null, 'Name', h('input', { type: 'text', placeholder: 'Your full name', autoComplete: 'name' })),
+              h('label', null, 'Phone Number', h('input', { type: 'tel', placeholder: '(555) 123-4567', autoComplete: 'tel' })),
+              h('label', null, 'Guest Count', h('input', { type: 'number', min: '1', placeholder: 'Number of guests' }))
+            ),
+            h('div', { className: 'rsvp-actions' },
+              h(motion.button, { type: 'button', className: 'luxury-button', whileTap: { scale: 0.97 }, onClick: () => setReply('We cannot wait to celebrate with you.') }, 'Joyfully Accept'),
+              h(motion.button, { type: 'button', className: 'secondary-button', whileTap: { scale: 0.97 }, onClick: () => setReply('Thank you for letting us know with love.') }, 'Regretfully Decline')
+            ),
+            reply && h(motion.p, { initial: { opacity: 0, y: 12 }, animate: { opacity: 1, y: 0 }, className: 'hero-copy', style: { marginBottom: 0 } }, reply)
+          )
+        )
+      );
+    }
 
-<div class="relative w-72 h-40 bg-[#1A1A1A] border border-[#D4AF37]/20 rounded-xl flex flex-col items-center justify-center overflow-hidden shadow-2xl my-auto">
-<div class="text-center p-4">
-<p class="text-[10px] uppercase tracking-[0.2em] text-[#A39274] mb-1 font-sans">Save The Date</p>
-<p class="text-xl font-semibold text-[#D4AF37] tracking-wider font-cinzel">DECEMBER 18, 2026</p>
-<p class="text-xs text-stone-400 mt-1 font-serif-luxury italic">Bangalore, India</p>
-</div>
+    function App() {
+      const [opening, setOpening] = useState(false);
+      const [entered, setEntered] = useState(false);
+      const handleOpen = () => {
+        if (opening) return;
+        setOpening(true);
+        playInvitationMusic();
+        setTimeout(() => setEntered(true), 2350);
+      };
+      useEffect(() => {
+        document.body.classList.toggle('invitation-locked', !entered);
+      }, [entered]);
+      return h(React.Fragment, null,
+        h(OpeningInvitation, { entered, opening, onOpen: handleOpen }),
+        h(motion.main, { className: 'app-shell', initial: { opacity: 0 }, animate: { opacity: entered ? 1 : 0.18 }, transition: { duration: 1.35, ease: 'easeOut' } },
+          h(HeroSection),
+          h(CountdownSection),
+          h(EventsSection),
+          h(VenueSection),
+          h(RSVPSection),
+          h('footer', { className: 'footer' },
+            h('div', { className: 'font-script' }, 'Vamsi & Uma Pragna'),
+            h('p', null, 'August 30, 2027 • The Bella Grande Ranch • Celina, Texas')
+          )
+        )
+      );
+    }
 
-<canvas id="scratchCanvas" width="288" height="160" class="absolute inset-0 cursor-crosshair transition-opacity duration-700"></canvas>
-</div>
-
-<div x-data="countdownTimer()" class="w-full mb-8">
-<div class="grid grid-cols-4 gap-2 text-center">
-<div class="bg-[#161616] py-3 rounded-lg border border-stone-800/60 shadow-md">
-<span x-text="days" class="block text-2xl font-light text-white font-mono">00</span>
-<span class="text-[9px] uppercase tracking-widest text-stone-500 font-sans">Days</span>
-</div>
-<div class="bg-[#161616] py-3 rounded-lg border border-stone-800/60 shadow-md">
-<span x-text="hours" class="block text-2xl font-light text-white font-mono">00</span>
-<span class="text-[9px] uppercase tracking-widest text-stone-500 font-sans">Hours</span>
-</div>
-<div class="bg-[#161616] py-3 rounded-lg border border-stone-800/60 shadow-md">
-<span x-text="minutes" class="block text-2xl font-light text-white font-mono">00</span>
-<span class="text-[9px] uppercase tracking-widest text-stone-500 font-sans">Mins</span>
-</div>
-<div class="bg-[#161616] py-3 rounded-lg border border-stone-800/60 shadow-md">
-<span x-text="seconds" class="block text-2xl font-light text-white font-mono">00</span>
-<span class="text-[9px] uppercase tracking-widest text-stone-500 font-sans">Secs</span>
-</div>
-</div>
-</div>
-
-</div>
-</div>
-
-<script>
-// Native HTML5 Canvas Scratch Logic Module
-document.addEventListener('alpine:init', () => {
-const canvas = document.getElementById('scratchCanvas');
-if (!canvas) return;
-const ctx = canvas.getContext('2d');
-
-// Setup Luxury Matte Scratch Cover
-ctx.fillStyle = '#262626';
-ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-// Matte Gold Text Overlay Guidelines
-ctx.fillStyle = '#D4AF37';
-ctx.font = '11px sans-serif';
-ctx.textAlign = 'center';
-ctx.letterSpacing = '2px';
-ctx.fillText('SCRATCH TO REVEAL DATE', canvas.width / 2, canvas.height / 2 + 4);
-
-let isDrawing = false;
-
-function scratch(e) {
-if (!isDrawing) return;
-const rect = canvas.getBoundingClientRect();
-const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-
-const x = clientX - rect.left;
-const y = clientY - rect.top;
-
-ctx.globalCompositeOperation = 'destination-out';
-ctx.beginPath();
-ctx.arc(x, y, 22, 0, Math.PI * 2);
-ctx.fill();
-
-checkScratchPercentage();
-}
-
-// Check if user revealed enough of the invitation card to fade it out completely
-function checkScratchPercentage() {
-const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-const pixels = imageData.data;
-let clearPixels = 0;
-for (let i = 3; i < pixels.length; i += 4) {
-if (pixels[i] === 0) clearPixels++;
-}
-if (clearPixels / (pixels.length / 4) > 0.45) {
-canvas.style.opacity = '0';
-setTimeout(() => canvas.style.display = 'none', 700);
-}
-}
-
-// Mouse & Native Capacitive Touch Binding Links
-canvas.addEventListener('mousedown', () => isDrawing = true);
-canvas.addEventListener('mousemove', scratch);
-canvas.addEventListener('mouseup', () => isDrawing = false);
-canvas.addEventListener('touchstart', () => isDrawing = true);
-canvas.addEventListener('touchmove', scratch);
-canvas.addEventListener('touchend', () => isDrawing = false);
-});
-
-// Native Alpine Countdown Lifecycle Module
-function countdownTimer() {
-return {
-days: '30', hours: '12', minutes: '45', seconds: '00',
-init() {
-// Hardcoded targets matching standard 2026 scheduling horizons
-const targetDate = new Date('December 18, 2026 18:00:00').getTime();
-setInterval(() => {
-const now = new Date().getTime();
-const difference = targetDate - now;
-
-if (difference < 0) return;
-
-this.days = String(Math.floor(difference / (1000 * 60 * 60 * 24))).padStart(2, '0');
-this.hours = String(Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
-this.minutes = String(Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
-this.seconds = String(Math.floor((difference % (1000 * 60)) / 1000)).padStart(2, '0');
-}, 1000);
-}
-}
-}
-</script>
+    createRoot(document.getElementById('root')).render(h(App));
+  </script>
 </body>
 </html>
