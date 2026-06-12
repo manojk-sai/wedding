@@ -1,0 +1,195 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <meta name="theme-color" content="#FFF8F3" />
+   <title>Vamsi & Uma Pragna | Royal Wedding Invitation</title>
+   <link rel="preconnect" href="https://fonts.googleapis.com" />
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Great+Vibes&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+   <style>
+     :root {
+       --cream: #FFF8F3;
+       --blush: #F5E4E0;
+       --rose-gold: #D8A48F;
+       --gold: #D4AF37;
+       --charcoal: #333333;
+       --deep-rose: #9D5C63;
+       --ivory-glass: rgba(255, 248, 243, 0.72);
+       --shadow: 0 28px 80px rgba(93, 48, 35, 0.16);
+     }
+ 
+     * { box-sizing: border-box; }
+     html { scroll-behavior: smooth; }
+     body {
+       margin: 0;
+       color: var(--charcoal);
+       background: var(--cream);
+       font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+       overflow-x: hidden;
+     }
+     body.invitation-locked { overflow: hidden; }
+     button, input { font: inherit; }
+     button { cursor: pointer; }
+ 
+@@ -203,50 +191,53 @@
+       background: rgba(212,175,55,0.72);
+       box-shadow: 0 0 18px rgba(212,175,55,0.82);
+       animation: particleFloat var(--duration) ease-in-out infinite;
+       left: var(--x);
+       top: var(--y);
+       opacity: 0.55;
+     }
+     @keyframes particleFloat {
+       0%, 100% { transform: translate3d(0,0,0) scale(0.7); opacity: 0.18; }
+       50% { transform: translate3d(var(--drift), -42px, 0) scale(1.18); opacity: 0.85; }
+     }
+     .door-stage { position: fixed; inset: 0; pointer-events: none; z-index: 120; display: flex; }
+     .door {
+       width: 50%;
+       height: 100%;
+       background:
+         radial-gradient(circle at center, rgba(255,255,255,0.16), transparent 16rem),
+         repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0 2px, transparent 2px 7rem),
+         linear-gradient(145deg, #6a2f28, #a75a4c 44%, #4d211f 100%);
+       border-color: rgba(212,175,55,0.6);
+       box-shadow: inset 0 0 0 9px rgba(212,175,55,0.18), inset 0 0 70px rgba(0,0,0,0.32);
+       position: relative;
+     }
+     .door.left { border-right: 3px solid rgba(212,175,55,0.72); transform-origin: left center; }
+     .door.right { border-left: 3px solid rgba(212,175,55,0.72); transform-origin: right center; }
+    .door-stage .door { transition: transform 2.05s cubic-bezier(0.77, 0, 0.175, 1); }
+    .door-stage .door.left { transform: translateX(-102%); }
+    .door-stage .door.right { transform: translateX(102%); }
+     .door::before {
+       content: '';
+       position: absolute;
+       inset: 9% 8%;
+       border: 1px solid rgba(212,175,55,0.42);
+       border-radius: 999px 999px 20px 20px;
+       background: linear-gradient(180deg, transparent, rgba(212,175,55,0.08));
+     }
+     .door::after {
+       content: '✦';
+       position: absolute;
+       top: 49%;
+       color: var(--gold);
+       font-size: 1.6rem;
+       filter: drop-shadow(0 0 12px rgba(212,175,55,0.72));
+     }
+     .door.left::after { right: 1.6rem; }
+     .door.right::after { left: 1.6rem; }
+ 
+     .hero {
+       min-height: 100svh;
+       text-align: center;
+       color: #51352f;
+       background:
+         linear-gradient(rgba(255,248,243,0.55), rgba(255,248,243,0.96)),
+@@ -394,56 +385,103 @@
+     .footer { text-align: center; padding: 4rem 1.25rem 6rem; color: rgba(51,51,51,0.66); }
+     .footer .font-script { color: #5a342f; font-size: clamp(2.7rem, 10vw, 4.8rem); }
+ 
+     @media (max-width: 820px) {
+       .countdown-grid { grid-template-columns: repeat(2, 1fr); }
+       .events-grid, .venue-layout { grid-template-columns: 1fr; }
+       .section { padding-top: 5.5rem; padding-bottom: 5.5rem; }
+       .map-frame { min-height: 340px; }
+     }
+     @media (max-width: 520px) {
+       .opening-card { border-radius: 34px; min-height: 58vh; }
+       .countdown-grid { gap: 0.65rem; }
+       .glass-card { border-radius: 24px; }
+       .rsvp-actions { grid-template-columns: 1fr; }
+       .luxury-button { width: 100%; min-width: 0; padding-left: 1rem; padding-right: 1rem; }
+       .section { padding-left: 1rem; padding-right: 1rem; }
+       .hero-copy { line-height: 1.75; }
+     }
+     @media (prefers-reduced-motion: reduce) {
+       *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: 0.001ms !important; }
+     }
+   </style>
+ </head>
+ <body class="invitation-locked">
+   <div id="root"></div>
+  <script>
+    const { useEffect, useRef, useState } = React;
+    const { createRoot } = ReactDOM;
+     const h = React.createElement;
+
+    const motionPropNames = new Set([
+      'initial',
+      'animate',
+      'exit',
+      'variants',
+      'whileTap',
+      'whileHover',
+      'whileInView',
+      'viewport',
+      'transition',
+    ]);
+
+    function toCssTransform(value) {
+      if (value === undefined || value === null) return '';
+      return typeof value === 'number' ? `translateY(${value}px)` : `translateY(${value})`;
+    }
+
+    const AnimatePresence = ({ children }) => h(React.Fragment, null, children);
+    const useScroll = () => ({ scrollYProgress: 0 });
+    const useTransform = (_value, _input, output) => output[0];
+    const motion = new Proxy({}, {
+      get: (_target, tag) => React.forwardRef((props, ref) => {
+        const domProps = {};
+        Object.entries(props || {}).forEach(([key, value]) => {
+          if (!motionPropNames.has(key)) domProps[key] = value;
+        });
+
+        const style = { ...(domProps.style || {}) };
+        const transformParts = [];
+        if (style.transform) transformParts.push(style.transform);
+        if (style.y !== undefined) {
+          transformParts.push(toCssTransform(style.y));
+          delete style.y;
+        }
+        if (props?.animate?.x !== undefined) transformParts.push(`translateX(${props.animate.x})`);
+        if (props?.animate?.y !== undefined) transformParts.push(toCssTransform(props.animate.y));
+        if (transformParts.length) style.transform = transformParts.join(' ');
+        if (props?.animate?.opacity !== undefined) style.opacity = props.animate.opacity;
+        if (props?.transition?.duration) {
+          const duration = `${props.transition.duration}s`;
+          style.transition = [style.transition, `opacity ${duration} ease, transform ${duration} ease`].filter(Boolean).join(', ');
+        }
+        domProps.style = style;
+        domProps.ref = ref;
+        return h(tag, domProps);
+      }),
+    });
+
+     const weddingDate = new Date('2027-08-30T11:30:00-05:00');
+     const particles = Array.from({ length: 36 }, (_, index) => ({
+       id: index,
+       x: `${(index * 29) % 101}%`,
+       y: `${(index * 47) % 100}%`,
+       drift: `${index % 2 ? '-' : ''}${18 + (index % 7) * 8}px`,
+       duration: `${6 + (index % 9) * 0.7}s`,
+     }));
+ 
+     function playInvitationMusic() {
+       const AudioContext = window.AudioContext || window.webkitAudioContext;
+       if (!AudioContext) return;
+       const ctx = new AudioContext();
+       const master = ctx.createGain();
+       master.gain.setValueAtTime(0.0001, ctx.currentTime);
+       master.gain.exponentialRampToValueAtTime(0.055, ctx.currentTime + 1.6);
+       master.connect(ctx.destination);
+       const notes = [261.63, 329.63, 392.00, 493.88, 392.00, 329.63];
+       notes.forEach((note, index) => {
+         const osc = ctx.createOscillator();
+         const gain = ctx.createGain();
+         osc.type = index % 2 ? 'triangle' : 'sine';
+         osc.frequency.value = note;
+         gain.gain.setValueAtTime(0.0001, ctx.currentTime + index * 0.34);
+         gain.gain.exponentialRampToValueAtTime(0.035, ctx.currentTime + index * 0.34 + 0.08);
