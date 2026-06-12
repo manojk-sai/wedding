@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Wedding Invitation</title>
+
+<script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+<style>
+/* Premium custom serif styles & utility setups */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap');
+
+.font-serif-luxury {
+font-family: 'Playfair Display', Georgia, serif;
+}
+.font-cinzel {
+font-family: 'Cinzel', serif;
+}
+
+/* Vertical Typography Setup */
+.vertical-text {
+writing-mode: vertical-rl;
+text-orientation: mixed;
+}
+
+/* Smooth CSS Keyframe Animations for Scenic Background Elements */
+@keyframes floatLeftToRight {
+0% { transform: translate(-50px, 100px) scale(0.8); opacity: 0; }
+10% { opacity: 1; }
+90% { opacity: 1; }
+100% { transform: translate(500px, -50px) scale(1); opacity: 0; }
+}
+
+@keyframes floatRightToLeft {
+0% { transform: translate(450px, 180px) scale(0.7); opacity: 0; }
+10% { opacity: 0.8; }
+90% { opacity: 0.8; }
+100% { transform: translate(-100px, 100px) scale(0.9); opacity: 0; }
+}
+
+.animate-bird-1 {
+animation: floatLeftToRight 6s linear infinite;
+}
+
+.animate-bird-2 {
+animation: floatRightToLeft 7s linear infinite;
+animation-delay: 1.5s;
+}
+</style>
+</head>
+<body class="bg-stone-900 flex justify-center items-center min-h-screen m-0 overflow-hidden selection:bg-transparent">
+
+<div x-data="{ phase: 1 }" class="relative w-full h-[100dvh] max-w-md bg-[#FFF5E1] shadow-2xl overflow-hidden flex flex-col justify-stretch">
+
+<div x-show="phase === 1"
+x-transition:leave="transition ease-in duration-700 opacity-0"
+class="absolute inset-0 z-50 flex w-full h-full">
+
+<div @click="phase = 2"
+class="w-1/2 h-full border-r border-[#D4AF37]/30 cursor-pointer flex items-center justify-end pr-4 transition-transform duration-1000 ease-in-out select-none active:-translate-x-full"
+style="background-color: #D15B8F; background-image: radial-gradient(circle at right, #b44374 0%, #D15B8F 70%);">
+<span class="text-white/60 text-xs tracking-[0.3em] uppercase vertical-text font-sans font-semibold">Click / Tap to Open</span>
+</div>
+
+<div @click="phase = 2"
+class="w-1/2 h-full border-l border-[#D4AF37]/30 cursor-pointer flex items-center justify-start pl-4 transition-transform duration-1000 ease-in-out select-none active:translate-x-full"
+style="background-color: #D15B8F; background-image: radial-gradient(circle at left, #b44374 0%, #D15B8F 70%);">
+<span class="text-white/60 text-xs tracking-[0.3em] uppercase vertical-text font-sans font-semibold">Click / Tap to Open</span>
+</div>
+
+<div class="absolute inset-x-0 bottom-24 text-center pointer-events-none z-50 px-6">
+<h2 class="text-white font-serif-luxury tracking-wide text-xl drop-shadow-lg">
+Fully Customizable to your Style
+</h2>
+</div>
+</div>
+
+<div x-show="phase === 2"
+x-init="$watch('phase', value => { if(value === 2) { setTimeout(() => phase = 3, 4500) } })"
+x-transition:enter="transition ease-out duration-700 opacity-0 scale-95"
+x-transition:leave="transition ease-in duration-500 opacity-0"
+class="absolute inset-0 bg-gradient-to-b from-[#FFF0F5] to-[#E3F2FD] flex flex-col items-center justify-between py-24 px-6 z-40">
+
+<div class="absolute text-2xl pointer-events-none animate-bird-1">🕊️</div>
+<div class="absolute text-xl pointer-events-none animate-bird-2">🕊️</div>
+
+<div class="mt-12 flex flex-col items-center justify-center">
+<div class="text-8xl font-light tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-[#D15B8F] to-[#8A4F7D] font-serif-luxury select-none drop-shadow-sm">
+RY
+</div>
+<div class="w-16 h-[1px] bg-[#D15B8F]/30 my-4"></div>
+</div>
+
+<div class="w-full text-center pb-6">
+<span class="text-xs text-stone-400 tracking-[0.25em] uppercase font-sans">One Single Link to Share</span>
+</div>
+</div>
+
+<div x-show="phase === 3"
+x-transition:enter="transition ease-out duration-1000 opacity-0 scale-95"
+class="w-full h-full bg-[#111111] text-[#E5D3B3] flex flex-col items-center justify-between p-8 border-4 border-stone-900 relative z-30">
+
+<div class="w-full text-center mt-8">
+<p class="text-[10px] tracking-[0.3em] text-[#A39274] uppercase font-sans">With Immense Joy and Love</p>
+<h1 class="text-3xl font-light mt-4 tracking-wide text-white font-cinzel">
+Yashwanth <span class="italic font-serif-luxury text-[#D4AF37]">&</span> Richa
+</h1>
+</div>
+
+<div class="relative w-72 h-40 bg-[#1A1A1A] border border-[#D4AF37]/20 rounded-xl flex flex-col items-center justify-center overflow-hidden shadow-2xl my-auto">
+<div class="text-center p-4">
+<p class="text-[10px] uppercase tracking-[0.2em] text-[#A39274] mb-1 font-sans">Save The Date</p>
+<p class="text-xl font-semibold text-[#D4AF37] tracking-wider font-cinzel">DECEMBER 18, 2026</p>
+<p class="text-xs text-stone-400 mt-1 font-serif-luxury italic">Bangalore, India</p>
+</div>
+
+<canvas id="scratchCanvas" width="288" height="160" class="absolute inset-0 cursor-crosshair transition-opacity duration-700"></canvas>
+</div>
+
+<div x-data="countdownTimer()" class="w-full mb-8">
+<div class="grid grid-cols-4 gap-2 text-center">
+<div class="bg-[#161616] py-3 rounded-lg border border-stone-800/60 shadow-md">
+<span x-text="days" class="block text-2xl font-light text-white font-mono">00</span>
+<span class="text-[9px] uppercase tracking-widest text-stone-500 font-sans">Days</span>
+</div>
+<div class="bg-[#161616] py-3 rounded-lg border border-stone-800/60 shadow-md">
+<span x-text="hours" class="block text-2xl font-light text-white font-mono">00</span>
+<span class="text-[9px] uppercase tracking-widest text-stone-500 font-sans">Hours</span>
+</div>
+<div class="bg-[#161616] py-3 rounded-lg border border-stone-800/60 shadow-md">
+<span x-text="minutes" class="block text-2xl font-light text-white font-mono">00</span>
+<span class="text-[9px] uppercase tracking-widest text-stone-500 font-sans">Mins</span>
+</div>
+<div class="bg-[#161616] py-3 rounded-lg border border-stone-800/60 shadow-md">
+<span x-text="seconds" class="block text-2xl font-light text-white font-mono">00</span>
+<span class="text-[9px] uppercase tracking-widest text-stone-500 font-sans">Secs</span>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<script>
+// Native HTML5 Canvas Scratch Logic Module
+document.addEventListener('alpine:init', () => {
+const canvas = document.getElementById('scratchCanvas');
+if (!canvas) return;
+const ctx = canvas.getContext('2d');
+
+// Setup Luxury Matte Scratch Cover
+ctx.fillStyle = '#262626';
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+// Matte Gold Text Overlay Guidelines
+ctx.fillStyle = '#D4AF37';
+ctx.font = '11px sans-serif';
+ctx.textAlign = 'center';
+ctx.letterSpacing = '2px';
+ctx.fillText('SCRATCH TO REVEAL DATE', canvas.width / 2, canvas.height / 2 + 4);
+
+let isDrawing = false;
+
+function scratch(e) {
+if (!isDrawing) return;
+const rect = canvas.getBoundingClientRect();
+const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+
+const x = clientX - rect.left;
+const y = clientY - rect.top;
+
+ctx.globalCompositeOperation = 'destination-out';
+ctx.beginPath();
+ctx.arc(x, y, 22, 0, Math.PI * 2);
+ctx.fill();
+
+checkScratchPercentage();
+}
+
+// Check if user revealed enough of the invitation card to fade it out completely
+function checkScratchPercentage() {
+const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+const pixels = imageData.data;
+let clearPixels = 0;
+for (let i = 3; i < pixels.length; i += 4) {
+if (pixels[i] === 0) clearPixels++;
+}
+if (clearPixels / (pixels.length / 4) > 0.45) {
+canvas.style.opacity = '0';
+setTimeout(() => canvas.style.display = 'none', 700);
+}
+}
+
+// Mouse & Native Capacitive Touch Binding Links
+canvas.addEventListener('mousedown', () => isDrawing = true);
+canvas.addEventListener('mousemove', scratch);
+canvas.addEventListener('mouseup', () => isDrawing = false);
+canvas.addEventListener('touchstart', () => isDrawing = true);
+canvas.addEventListener('touchmove', scratch);
+canvas.addEventListener('touchend', () => isDrawing = false);
+});
+
+// Native Alpine Countdown Lifecycle Module
+function countdownTimer() {
+return {
+days: '30', hours: '12', minutes: '45', seconds: '00',
+init() {
+// Hardcoded targets matching standard 2026 scheduling horizons
+const targetDate = new Date('December 18, 2026 18:00:00').getTime();
+setInterval(() => {
+const now = new Date().getTime();
+const difference = targetDate - now;
+
+if (difference < 0) return;
+
+this.days = String(Math.floor(difference / (1000 * 60 * 60 * 24))).padStart(2, '0');
+this.hours = String(Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
+this.minutes = String(Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+this.seconds = String(Math.floor((difference % (1000 * 60)) / 1000)).padStart(2, '0');
+}, 1000);
+}
+}
+}
+</script>
+</body>
+</html>
